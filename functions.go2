@@ -1,0 +1,90 @@
+package main
+
+import (
+	"fmt"
+	"reflect"
+)
+
+func main() {
+	ss := []string{"hello", "generic", "world"}
+	is := []int{0, 3, 7}
+
+	printStringSlice(ss)
+	printIntSlice(is)
+
+	printCase(ss)
+	printCase(is)
+
+	printReflect(ss)
+	printReflect(is)
+
+	printGeneric(ss)
+	printGeneric(is)
+}
+
+// A specific implementation for slices of strings
+func printStringSlice(list []string) {
+	fmt.Println("string slice: ")
+	for _, s := range list {
+		fmt.Print(s, " ")
+	}
+	fmt.Print("\n")
+}
+
+// A specific implementation for slices of integers
+func printIntSlice(list []int) {
+	fmt.Println("int slice: ")
+	for _, i := range list {
+		fmt.Print(i, " ")
+	}
+	fmt.Print("\n")
+}
+
+// An implementation based on a nil interface supporting either slices of integers or strings using a case statement
+func printCase(v interface{}) {
+	fmt.Println("case: ")
+	switch list := v.(type) {
+	case []string:
+		for _, s := range list {
+			fmt.Print(s, " ")
+		}
+	case []int:
+		for _, i := range list {
+			fmt.Print(i, " ")
+		}
+	}
+	fmt.Print("\n")
+}
+
+// A implementation based on a nil interface supporting slices using reflection
+func printReflect(v interface{}) {
+	fmt.Println("reflect: ")
+	val := reflect.ValueOf(v)
+	if val.Kind() != reflect.Slice {
+		return
+	}
+
+	for i := 0; i < val.Len(); i++ {
+		fmt.Print(val.Index(i).Interface(), " ")
+	}
+	fmt.Print("\n")
+}
+
+// type T struct{}
+
+// func printGeneric(slice []T) {
+// 	fmt.Println("generic: ")
+// 	for _, v := range slice {
+// 		fmt.Print(v, " ")
+// 	}
+// 	fmt.Print("\n")
+// }
+
+// An implementation using Go generics supporting any slice of type []T
+func printGeneric[T any](slice []T) {
+	fmt.Println("generic: ")
+	for _, v := range slice {
+		fmt.Print(v, " ")
+	}
+	fmt.Print("\n")
+}

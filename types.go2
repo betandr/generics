@@ -1,0 +1,92 @@
+package main
+
+import (
+	"errors"
+	"fmt"
+)
+
+type vectorString []string
+
+func (v vectorString) last() (string, error) {
+	if len(v) == 0 {
+		return "", errors.New("empty")
+	}
+
+	return v[len(v)-1], nil
+}
+
+type vectorInt []int
+
+func (v vectorInt) last() (int, error) {
+	if len(v) == 0 {
+		return 0, errors.New("empty")
+	}
+
+	return v[len(v)-1], nil
+}
+
+type vectorInterface []interface{}
+
+func (v vectorInterface) last() (interface{}, error) {
+	if len(v) == 0 {
+		return nil, errors.New("empty")
+	}
+
+	return v[len(v)-1], nil
+}
+
+type vector[T any] []T
+
+func (v vector[T]) last1() (T, error) {
+	if len(v) == 0 {
+		return *new(T), errors.New("empty")
+	}
+	return v[len(v)-1], nil
+}
+
+
+
+
+func (v vector[T]) last() (T, error) {
+	var zero T
+	if len(v) == 0 {
+		return zero, errors.New("empty")
+	}
+	return v[len(v)-1], nil
+}
+
+
+
+func main() {
+	vs := vectorString{"hello", "generic", "world"}
+	s, _ := vs.last()
+	fmt.Printf("vectorString last str: %s\n", s)
+
+	vi := vectorInt{0, 3, 7}
+	i1, _ := vi.last()
+	fmt.Printf("vectorInt last int: %d\n", i1)
+
+	vf1 := vectorInterface{1, 2, 3, 4}
+	v1, _ := vf1.last()
+	fmt.Printf("vectorInterface last: %v\n", v1)
+
+	vf2 := vectorInterface{1, "hello", 3, "world"}
+	v2, _ := vf2.last()
+	switch v := v2.(type) {
+	case int:
+		fmt.Printf("vectorInterface last int: %d\n", v)
+	case string:
+		fmt.Printf("vectorInterface last str: %s\n", v)
+	default:
+		fmt.Printf("vectorInterface last: %v\n", v)
+	}
+
+	vg := vector[int]{1, 2, 3, 4}
+	i2, _ := vg.last()
+	fmt.Printf("vector last int: %d\n", i2)
+
+
+	vg2 := vector[string]{"hello", "world"}
+	i3, _ := vg2.last()
+	fmt.Printf("vector last str: %s\n", i3)
+}
